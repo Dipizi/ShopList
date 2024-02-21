@@ -1,19 +1,31 @@
 package com.example.shoplist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.shoplist.domain.entities.ShopItem
 import com.example.shoplist.domain.usecase.ShopListRepository
 import java.lang.RuntimeException
 
 object ShopListRepositoryImpl : ShopListRepository {
 
+    private val shopListLD = MutableLiveData<List<ShopItem>>()
+
     private val shopList = mutableListOf<ShopItem>()
 
     private var autoGenerateId = 0
+
+    init {
+        for (i in 0 until 10) {
+            val item = ShopItem(name = "Name: $i", count = i, isEnabled = true)
+            addShopItem(item)
+        }
+    }
     override fun addShopItem(shopItem: ShopItem) {
         if (shopItem.id == ShopItem.UNKNOWN_ID) {
             shopItem.id = autoGenerateId++
         }
         shopList.add(shopItem)
+        updateLD()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -22,7 +34,7 @@ object ShopListRepositoryImpl : ShopListRepository {
         addShopItem(shopItem)
     }
 
-    override fun getShopItemList(): List<ShopItem> = shopList.toList()
+    override fun getShopItemList(): LiveData<List<ShopItem>> = shopListLD
 
     override fun getShopItem(id: Int): ShopItem {
         return shopList.find {
@@ -32,5 +44,10 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     override fun removeShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateLD()
+    }
+
+    private fun updateLD() {
+        shopListLD.value = shopList.toList()
     }
 }
