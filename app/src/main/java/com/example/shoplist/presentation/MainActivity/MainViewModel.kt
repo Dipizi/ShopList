@@ -1,7 +1,6 @@
-package com.example.shoplist.presentation
+package com.example.shoplist.presentation.MainActivity
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shoplist.data.ShopListRepositoryImpl
 import com.example.shoplist.domain.entities.ShopItem
@@ -19,7 +18,7 @@ class MainViewModel() : ViewModel() {
 
     val liveDataShopList: LiveData<List<ShopItem>> = getShopItemListUseCase.getShopItemList()
 
-    fun editShopItem(shopItem: ShopItem) {
+    fun editActiveStatusShopItem(shopItem: ShopItem) {
         val newItem = shopItem.copy(isEnabled = !shopItem.isEnabled)
         editShopItemListUseCase.editShopItem(newItem)
     }
