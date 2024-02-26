@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ShopList</string>
+    <string name="name_item">Название товара</string>
+    <string name="save">Сохранить</string>
+    <string name="count_item">Необходимое количество</string>
+    <string name="message_about_error_name">Название введено неверно</string>
+    <string name="message_about_error_count">Введено невозможное количество</string>
 </resources>
