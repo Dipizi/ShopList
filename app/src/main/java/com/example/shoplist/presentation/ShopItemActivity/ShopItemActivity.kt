@@ -2,26 +2,13 @@ package com.example.shoplist.presentation.ShopItemActivity
 
 import android.content.Context
 import android.content.Intent
-
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.Button
-import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.shoplist.R
 import com.example.shoplist.domain.entities.ShopItem
-import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity() {
-
-    lateinit var viewModel: ShopItemViewModel
-    lateinit var tilName: TextInputLayout
-    lateinit var tilCount: TextInputLayout
-    lateinit var editTextName: EditText
-    lateinit var editTextCount: EditText
-    lateinit var buttonSave: Button
+class ShopItemActivity : AppCompatActivity()/*, ShopItemFragment.OnEditingFinishedListener*/ {
 
     private var screenMode = EXTRA_MODE_UNKNOWN
     private var shopItemId = ShopItem.UNKNOWN_ID
@@ -29,95 +16,32 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        initViews()
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         setUpModeScreen()
-        setTextChangedListeners()
-        observeLiveData()
-
     }
 
-    private fun observeLiveData() {
-        viewModel.liveDataErrorName.observe(this) { isError ->
-            tilName.error = if (isError) {
-                getString(R.string.message_about_error_name)
-            } else {
-                null
-            }
-        }
+//    override fun onEditingFinished() {
+//        finish()
+//    }
 
-        viewModel.liveDataErrorCount.observe(this) { isError ->
-            tilCount.error = if (isError) {
-                getString(R.string.message_about_error_count)
-            } else {
-                null
-            }
-
-        }
-
-        viewModel.liveDataProcessFinish.observe(this) {
-            finish()
-        }
-    }
     private fun setUpModeScreen() {
         when (screenMode) {
-            EXTRA_ADD_MODE -> launchAddMode()
-            EXTRA_EDIT_MODE -> launchEditMode()
-        }
-    }
-    private fun setTextChangedListeners() {
-        editTextName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            EXTRA_ADD_MODE -> launchFragment(
+                ShopItemFragment.newInstanceFragmentAddMode()
+            )
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetLiveDataErrorName()
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-
-        })
-
-        editTextCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetLiveDataErrorCount()
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-
-        })
-    }
-    private fun launchEditMode() {
-        viewModel.getShopItem(shopItemId)
-
-        viewModel.liveDataShopItem.observe(this) { itemShop ->
-            editTextName.setText(itemShop.name)
-            editTextCount.setText(itemShop.count.toString())
-        }
-
-        buttonSave.setOnClickListener {
-            val name = editTextName.text.toString()
-            val count = editTextCount.text.toString()
-            viewModel.editShopItem(name, count)
+            EXTRA_EDIT_MODE -> launchFragment(
+                ShopItemFragment.newInstanceFragmentEditMode(shopItemId)
+            )
         }
     }
 
-    private fun launchAddMode() {
-
-        buttonSave.setOnClickListener {
-            val name = editTextName.text.toString()
-            val count = editTextCount.text.toString()
-            viewModel.addShopItem(name, count)
-        }
-    }
-
-    private fun initViews() {
-        tilName = findViewById(R.id.textInputLayoutName)
-        tilCount = findViewById(R.id.textInputLayoutCount)
-        editTextName = findViewById(R.id.editTextName)
-        editTextCount = findViewById(R.id.editTextCount)
-        buttonSave = findViewById(R.id.buttonSave)
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.shop_item_fragment_container_view,
+                fragment
+            )
+            .commit()
     }
 
     private fun parseIntent() {

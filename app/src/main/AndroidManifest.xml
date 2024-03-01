@@ -15,6 +15,7 @@
         <activity
             android:name=".presentation.ShopItemActivity.ShopItemActivity"
             android:windowSoftInputMode="adjustResize"
+
             android:exported="false" />
         <activity
             android:name=".presentation.MainActivity.MainActivity"
