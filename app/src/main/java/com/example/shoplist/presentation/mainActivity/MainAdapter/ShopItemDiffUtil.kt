@@ -1,4 +1,4 @@
-package com.example.shoplist.presentation.MainActivity.MainAdapter
+package com.example.shoplist.presentation.mainActivity.MainAdapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.shoplist.domain.entities.ShopItem

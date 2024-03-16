@@ -1,32 +1,28 @@
-package com.example.shoplist.presentation.MainActivity
+package com.example.shoplist.presentation.mainActivity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
-import com.example.shoplist.presentation.MainActivity.MainAdapter.ShopListAdapter
-import com.example.shoplist.presentation.ShopItemActivity.ShopItemActivity
-import com.example.shoplist.presentation.ShopItemActivity.ShopItemFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.shoplist.databinding.ActivityMainBinding
+import com.example.shoplist.presentation.mainActivity.MainAdapter.ShopListAdapter
+import com.example.shoplist.presentation.shopItemActivity.ShopItemActivity
+import com.example.shoplist.presentation.shopItemActivity.ShopItemFragment
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var recyclerViewListShopItem: RecyclerView
     private lateinit var adapterShopList: ShopListAdapter
-    private lateinit var buttonAdd: FloatingActionButton
-    private var fragmentContainer: FragmentContainerView? = null
+    private lateinit var viewBinding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        fragmentContainer = findViewById(R.id.mainActivityFragmentContainerView)
+        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
         adapterShopList = ShopListAdapter()
         setupRecyclerView()
-        buttonAdd = findViewById(R.id.floatActionButtonAddShopItem)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         viewModel.liveDataShopList.observe(this) {
@@ -45,19 +41,18 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
         }
 
-        buttonAdd.setOnClickListener {
+        viewBinding.floatActionButtonAddShopItem.setOnClickListener {
             if (isLandOrientation()) {
                 launchFragment(ShopItemFragment.newInstanceFragmentAddMode())
             } else {
                 val intent = ShopItemActivity.newIntentAddMode(this)
                 startActivity(intent)
             }
-
         }
     }
 
     private fun isLandOrientation(): Boolean {
-        return fragmentContainer != null
+        return viewBinding.mainActivityFragmentContainerView != null
     }
 
     private fun launchFragment(fragment: Fragment) {
@@ -93,12 +88,11 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallBack)
-        itemTouchHelper.attachToRecyclerView(recyclerViewListShopItem)
+        itemTouchHelper.attachToRecyclerView(viewBinding.recyclerViewListShopItem)
     }
 
     private fun setupRecyclerView() {
-        recyclerViewListShopItem = findViewById(R.id.recyclerViewListShopItem)
-        recyclerViewListShopItem.adapter = adapterShopList
+        viewBinding.recyclerViewListShopItem.adapter = adapterShopList
         setupItemTouchHelperToRecyclerView()
     }
 

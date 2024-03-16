@@ -1,4 +1,4 @@
-package com.example.shoplist.presentation.ShopItemActivity
+package com.example.shoplist.presentation.shopItemActivity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
