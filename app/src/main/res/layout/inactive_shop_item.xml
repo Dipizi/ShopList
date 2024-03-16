@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="4dp"
-    app:cardElevation="1dp"
-    app:cardUseCompatPadding="true">
+<layout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutShopItem"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="#A6FFBB33">
+        android:layout_margin="4dp"
+        app:cardElevation="1dp"
+        app:cardUseCompatPadding="true">
 
-        <TextView
-            android:padding="10dp"
-            android:id="@+id/textViewName"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linearLayoutShopItem"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            tools:text="ShopItem"/>
+            android:background="#A6FFBB33"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <TextView
-            android:padding="4dp"
-            android:layout_marginEnd="14dp"
-            android:gravity="end"
-            android:id="@+id/textViewCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="666"/>
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="ShopItem" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textViewCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
+                android:gravity="end"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="666" />
 
-</androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>

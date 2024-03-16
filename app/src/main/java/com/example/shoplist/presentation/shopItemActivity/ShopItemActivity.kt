@@ -1,4 +1,4 @@
-package com.example.shoplist.presentation.ShopItemActivity
+package com.example.shoplist.presentation.shopItemActivity
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.shoplist.R
 import com.example.shoplist.domain.entities.ShopItem
 
-class ShopItemActivity : AppCompatActivity()/*, ShopItemFragment.OnEditingFinishedListener*/ {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = EXTRA_MODE_UNKNOWN
     private var shopItemId = ShopItem.UNKNOWN_ID
@@ -19,9 +19,9 @@ class ShopItemActivity : AppCompatActivity()/*, ShopItemFragment.OnEditingFinish
         setUpModeScreen()
     }
 
-//    override fun onEditingFinished() {
-//        finish()
-//    }
+    override fun onEditingFinished() {
+        finish()
+    }
 
     private fun setUpModeScreen() {
         when (screenMode) {
