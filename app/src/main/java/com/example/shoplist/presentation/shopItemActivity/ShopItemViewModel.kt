@@ -1,17 +1,20 @@
 package com.example.shoplist.presentation.shopItemActivity
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoplist.data.ShopListRepositoryImpl
 import com.example.shoplist.domain.entities.ShopItem
 import com.example.shoplist.domain.usecase.AddShopItemUseCase
 import com.example.shoplist.domain.usecase.EditShopItemUseCase
 import com.example.shoplist.domain.usecase.GetShopItemUseCase
+import kotlinx.coroutines.launch
 
-class ShopItemViewModel : ViewModel() {
+class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
@@ -32,8 +35,10 @@ class ShopItemViewModel : ViewModel() {
     private val _liveDataProcessFinish = MutableLiveData<Boolean>()
     val liveDataProcessFinish: LiveData<Boolean> = _liveDataProcessFinish
     fun getShopItem(id: Int) {
-        val shopItem = getShopItemUseCase.getShopItem(id)
-        _liveDataShopItem.value = shopItem
+        viewModelScope.launch {
+            val shopItem = getShopItemUseCase.getShopItem(id)
+            _liveDataShopItem.value = shopItem
+        }
     }
 
     fun addShopItem(inputName: String?, inputCount: String?) {
@@ -41,9 +46,11 @@ class ShopItemViewModel : ViewModel() {
         val count = parseCount(inputCount)
         val validateFields = isValidateFields(name, count)
         if (validateFields) {
-            val shopItem = ShopItem(name = name, count = count, isEnabled = true)
-            addShopItemUseCase.addShopItem(shopItem)
-            _liveDataProcessFinish.value = true
+            viewModelScope.launch {
+                val shopItem = ShopItem(name = name, count = count, isEnabled = true)
+                addShopItemUseCase.addShopItem(shopItem)
+                _liveDataProcessFinish.value = true
+            }
         }
     }
 
@@ -53,9 +60,11 @@ class ShopItemViewModel : ViewModel() {
         val validateFields = isValidateFields(name, count)
         if (validateFields) {
             _liveDataShopItem.value?.let {
-                val shopItem = it.copy(name = name, count = count)
-                editShopItemUseCase.editShopItem(shopItem)
-                _liveDataProcessFinish.value = true
+                viewModelScope.launch {
+                    val shopItem = it.copy(name = name, count = count)
+                    editShopItemUseCase.editShopItem(shopItem)
+                    _liveDataProcessFinish.value = true
+                }
             }
         }
     }
