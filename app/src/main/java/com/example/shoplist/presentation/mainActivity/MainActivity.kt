@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         adapterShopList = ShopListAdapter()
         setupRecyclerView()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         viewModel.liveDataShopList.observe(this) {
             adapterShopList.submitList(it)

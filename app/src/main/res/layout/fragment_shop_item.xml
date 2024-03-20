@@ -33,9 +33,9 @@
                 android:id="@+id/editTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:setName="@{viewModel.liveDataShopItem.name}"
                 android:hint="@string/name_item"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                app:setName="@{viewModel.liveDataShopItem.name}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -54,10 +54,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextCount"
                 android:layout_width="match_parent"
-                app:setCount="@{viewModel.liveDataShopItem.count}"
                 android:layout_height="wrap_content"
                 android:hint="@string/count_item"
-                android:inputType="number" />
+                android:inputType="number"
+                app:setCount="@{viewModel.liveDataShopItem.count}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
