@@ -1,23 +1,21 @@
 package com.example.shoplist.presentation.mainActivity
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shoplist.data.ShopListRepositoryImpl
 import com.example.shoplist.domain.entities.ShopItem
 import com.example.shoplist.domain.usecase.EditShopItemUseCase
 import com.example.shoplist.domain.usecase.GetShopItemListUseCase
 import com.example.shoplist.domain.usecase.RemoveShopItemUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel @Inject constructor(
+    private val getShopItemListUseCase: GetShopItemListUseCase,
+    private val removeShopItemUseCase: RemoveShopItemUseCase,
+    private val editShopItemListUseCase: EditShopItemUseCase
+) : ViewModel() {
 
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val getShopItemListUseCase = GetShopItemListUseCase(repository)
-    private val removeShopItemUseCase = RemoveShopItemUseCase(repository)
-    private val editShopItemListUseCase = EditShopItemUseCase(repository)
 
     val liveDataShopList: LiveData<List<ShopItem>> = getShopItemListUseCase.getShopItemList()
 

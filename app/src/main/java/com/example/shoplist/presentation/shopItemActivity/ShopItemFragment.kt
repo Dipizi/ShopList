@@ -11,10 +11,25 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoplist.databinding.FragmentShopItemBinding
 import com.example.shoplist.domain.entities.ShopItem
+import com.example.shoplist.presentation.ShopListApp
+import com.example.shoplist.utils.ViewModelFactory
+import javax.inject.Inject
 
 class ShopItemFragment : Fragment() {
 
-    private lateinit var viewModel: ShopItemViewModel
+    private val activityComponent by lazy {
+        (requireActivity().application as ShopListApp).component
+            .getActivityComponent()
+            .create()
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
+    }
+
     private var _viewBinding: FragmentShopItemBinding? = null
     private val viewBinding: FragmentShopItemBinding
         get() = _viewBinding ?: throw RuntimeException("binding is null")
@@ -25,6 +40,7 @@ class ShopItemFragment : Fragment() {
     private var shopItemId: Int = ShopItem.UNKNOWN_ID
 
     override fun onAttach(context: Context) {
+        activityComponent.injectShopItemFragment(this)
         super.onAttach(context)
 
         when (context is OnEditingFinishedListener) {
@@ -49,7 +65,6 @@ class ShopItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         viewBinding.viewModel = viewModel
         viewBinding.lifecycleOwner = viewLifecycleOwner
         setUpModeScreen()

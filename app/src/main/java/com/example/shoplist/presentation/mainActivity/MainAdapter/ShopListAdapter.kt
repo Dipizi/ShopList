@@ -10,20 +10,25 @@ import com.example.shoplist.R
 import com.example.shoplist.databinding.ActiveShopItemBinding
 import com.example.shoplist.databinding.InactiveShopItemBinding
 import com.example.shoplist.domain.entities.ShopItem
+import javax.inject.Inject
 
-class ShopListAdapter : ListAdapter<ShopItem, ShopListAdapter.ShopListViewHolder>(ShopItemDiffUtil()) {
+class ShopListAdapter @Inject constructor(
+    shopItemDiffUtil: ShopItemDiffUtil
+) : ListAdapter<ShopItem, ShopListAdapter.ShopListViewHolder>(shopItemDiffUtil) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
-    inner class ShopListViewHolder(val viewBinding: ViewDataBinding) : RecyclerView.ViewHolder(viewBinding.root)
+    inner class ShopListViewHolder(val viewBinding: ViewDataBinding) :
+        RecyclerView.ViewHolder(viewBinding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopListViewHolder {
         val viewBinding = DataBindingUtil.inflate<ViewDataBinding>(
             LayoutInflater.from(parent.context),
             viewType,
             parent,
-            false)
+            false
+        )
         return ShopListViewHolder(viewBinding)
     }
 
@@ -37,7 +42,7 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopListAdapter.ShopListViewHolder
         val shopItem = getItem(position)
         val viewBinding = holder.viewBinding
 
-        when(viewBinding) {
+        when (viewBinding) {
             is ActiveShopItemBinding -> {
                 viewBinding.textViewName.text = shopItem.name
                 viewBinding.textViewCount.text = shopItem.count.toString()
