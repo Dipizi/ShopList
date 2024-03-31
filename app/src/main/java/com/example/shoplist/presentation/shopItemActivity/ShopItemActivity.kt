@@ -15,8 +15,10 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
-        parseIntent()
-        setUpModeScreen()
+        if (savedInstanceState == null) {
+            parseIntent()
+            setUpModeScreen()
+        }
     }
 
     override fun onEditingFinished() {

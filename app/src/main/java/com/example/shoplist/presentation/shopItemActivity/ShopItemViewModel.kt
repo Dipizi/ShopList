@@ -1,24 +1,22 @@
 package com.example.shoplist.presentation.shopItemActivity
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shoplist.data.ShopListRepositoryImpl
 import com.example.shoplist.domain.entities.ShopItem
 import com.example.shoplist.domain.usecase.AddShopItemUseCase
 import com.example.shoplist.domain.usecase.EditShopItemUseCase
 import com.example.shoplist.domain.usecase.GetShopItemUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
+class ShopItemViewModel @Inject constructor(
+    private val getShopItemUseCase: GetShopItemUseCase,
+    private val addShopItemUseCase: AddShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase,
+) : ViewModel() {
 
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
 
     private val _liveDataShopItem = MutableLiveData<ShopItem>()
     val liveDataShopItem: LiveData<ShopItem> = _liveDataShopItem

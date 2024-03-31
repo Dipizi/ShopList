@@ -8,30 +8,48 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
 import com.example.shoplist.databinding.ActivityMainBinding
+import com.example.shoplist.presentation.ShopListApp
 import com.example.shoplist.presentation.mainActivity.MainAdapter.ShopListAdapter
 import com.example.shoplist.presentation.shopItemActivity.ShopItemActivity
 import com.example.shoplist.presentation.shopItemActivity.ShopItemFragment
+import com.example.shoplist.utils.ViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
-    private lateinit var viewModel: MainViewModel
-    private lateinit var adapterShopList: ShopListAdapter
-    private lateinit var viewBinding: ActivityMainBinding
+    private val activityComponent by lazy {
+        (application as ShopListApp).component
+            .getActivityComponent()
+            .create()
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var shopListAdapter: ShopListAdapter
+
+    private val viewBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent.injectMainActivity(this)
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        adapterShopList = ShopListAdapter()
         setupRecyclerView()
 
         viewModel.liveDataShopList.observe(this) {
-            adapterShopList.submitList(it)
+            shopListAdapter.submitList(it)
         }
 
 
-        adapterShopList.onShopItemLongClickListener = { viewModel.editActiveStatusShopItem(it) }
-        adapterShopList.onShopItemClickListener = { itemShop ->
+        shopListAdapter.onShopItemLongClickListener = { viewModel.editActiveStatusShopItem(it) }
+        shopListAdapter.onShopItemClickListener = { itemShop ->
             if (isLandOrientation()) {
                 launchFragment(ShopItemFragment.newInstanceFragmentEditMode(itemShop.id))
             } else {
@@ -82,7 +100,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val item = adapterShopList.currentList[position]
+                val item = shopListAdapter.currentList[position]
                 viewModel.removeShopItem(item)
             }
         }
@@ -92,7 +110,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun setupRecyclerView() {
-        viewBinding.recyclerViewListShopItem.adapter = adapterShopList
+        viewBinding.recyclerViewListShopItem.adapter = shopListAdapter
         setupItemTouchHelperToRecyclerView()
     }
 
